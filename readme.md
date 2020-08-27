@@ -1,9 +1,4 @@
-# laravel-search
-
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
-[![StyleCI][ico-styleci]][link-styleci]
+# Laravel Address Finder
 
 This package provides a facade for address searching. Currently the only driver is available is [Loqate](https://www.loqate.com). There is also a mock driver for testing that does not communicate with any API's
 

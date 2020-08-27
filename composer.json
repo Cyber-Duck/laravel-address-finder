@@ -4,9 +4,9 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "author name",
-            "email": "author email",
-            "homepage": "author homepage"
+            "name": "Neil Aldred",
+            "email": "neil@cyber-duck.co.uk",
+            "homepage": "https://www.cyber-duck.co.uk/"
         }
     ],
     "homepage": "https://github.com/cyber-duck/laravel-address-finder",

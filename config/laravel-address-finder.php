@@ -16,7 +16,7 @@ return [
     'driver' => env('ADDRESS_FINDER_DRIVER', 'mock'),
 
     'cache' => [
-        'enabled' => false,
+        'enabled' => env('ADDRESS_FINDER_CACHE', false),
         'ttl'=> 1440,
         'store' => env('ADDRESS_FINDER_CACHE_DRIVER', env('CACHE_DRIVER'))
     ],

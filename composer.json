@@ -1,5 +1,5 @@
 {
-    "name": "cyberduck/laravel-address-finder",
+    "name": "cyber-duck/laravel-address-finder",
     "description": ":package_description",
     "license": "license",
     "authors": [
@@ -9,7 +9,7 @@
             "homepage": "author homepage"
         }
     ],
-    "homepage": "https://github.com/cyberduck/laravel-address-finder",
+    "homepage": "https://github.com/cyber-duck/laravel-address-finder",
     "keywords": ["Laravel", "laravel-address-finder"],
     "require": {
         "php": "7.3.0",

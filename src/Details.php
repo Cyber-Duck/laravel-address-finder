@@ -17,6 +17,11 @@ class Details
     /**
      * @var string
      */
+    private $company;
+
+    /**
+     * @var string
+     */
     private $line1;
 
     /**
@@ -77,6 +82,24 @@ class Details
     public function setCity($city): Details
     {
         $this->city = $city;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     * @return Details
+     */
+    public function setCompany($company): Details
+    {
+        $this->company = $company;
         return $this;
     }
 
@@ -182,6 +205,7 @@ class Details
             'postal_code' => $this->getPostalCode(),
             'province_code' => $this->getProvinceCode() ?? '',
             'state' => $this->getState() ?? '',
+            'company' => $this->getCompany(),
             'city' => $this->getCity(),
             'address_line_1' => $this->getLine1(),
             'address_line_2' => $this->getLine2(),

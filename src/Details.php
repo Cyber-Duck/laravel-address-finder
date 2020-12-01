@@ -90,7 +90,7 @@ class Details
      */
     public function getCompany()
     {
-        return $this->city;
+        return $this->company;
     }
 
     /**

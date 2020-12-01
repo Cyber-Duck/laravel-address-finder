@@ -205,6 +205,7 @@ class Details
             'postal_code' => $this->getPostalCode(),
             'province_code' => $this->getProvinceCode() ?? '',
             'state' => $this->getState() ?? '',
+            'company' => $this->getCompany(),
             'city' => $this->getCity(),
             'address_line_1' => $this->getLine1(),
             'address_line_2' => $this->getLine2(),

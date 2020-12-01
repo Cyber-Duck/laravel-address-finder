@@ -4,6 +4,8 @@ namespace CyberDuck\AddressFinder\Drivers;
 
 use CyberDuck\AddressFinder\Details;
 use CyberDuck\AddressFinder\Suggestions;
+use Http;
+use Illuminate\Http\Client\PendingRequest;
 
 /**
  * Class LoqateDriver
@@ -23,7 +25,7 @@ class LoqateDriver implements DriverContract
     private $detailsEndpoint;
 
     /**
-     * @var \Illuminate\Http\Client\PendingRequest
+     * @var PendingRequest
      */
     private $client;
 
@@ -35,7 +37,7 @@ class LoqateDriver implements DriverContract
         $config = config('laravel-address-finder.loqate');
         $this->suggestionsEndpoint = $config['api']['endpoints']['suggestions'];
         $this->detailsEndpoint = $config['api']['endpoints']['details'];
-        $this->client =  \Http::withOptions([
+        $this->client =  Http::withOptions([
             'base_uri' => $config['api']['base_uri'],
             'query' => [
                 'Key' => $config['api']['key'],
@@ -119,6 +121,7 @@ class LoqateDriver implements DriverContract
 
         return $details->setPostalCode($addressDetails['PostalCode'] ?? '')
             ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
+            ->setCompany($addressDetails['Company'])
             ->setCity($addressDetails['City'])
             ->setLine1($addressDetails['Line1'])
             ->setLine2($addressDetails['Line2'])

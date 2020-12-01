@@ -40,7 +40,7 @@ class MockDriver implements DriverContract
      */
     public function suggestions($query, $country, $group_id): Suggestions
     {
-        if (! empty($group_id)) {
+        if (!empty($group_id)) {
             return $this->parseSuggestions($this->getAddressChildrenResponse());
         }
 
@@ -59,9 +59,9 @@ class MockDriver implements DriverContract
                         'Id' => 'default',
                         'Type' => 'Street',
                         'Text' => '20A Example Street',
-                        'Description' => '20A Example Street Example City, Example Country, 1234'
-                    ]
-                ]
+                        'Description' => '20A Example Street Example City, Example Country, 1234',
+                    ],
+                ],
             ],
             'GB' => [
                 'Items' => [
@@ -69,9 +69,9 @@ class MockDriver implements DriverContract
                         'Id' => '1',
                         'Type' => 'Street',
                         'Text' => '32B Greville Street',
-                        'Description' => 'Greville Street London, 32B, United Kingdom, EC1N 8TB'
-                    ]
-                ]
+                        'Description' => 'Greville Street London, 32B, United Kingdom, EC1N 8TB',
+                    ],
+                ],
             ],
             'ES' => [
                 'Items' => [
@@ -79,9 +79,9 @@ class MockDriver implements DriverContract
                         'Id' => '2',
                         'Type' => 'Street',
                         'Text' => 'Calle de Ulldecona, 15',
-                        'Description' => "Calle de Ulldecona, 15, 08007 Barcelona, Spain"
-                    ]
-                ]
+                        'Description' => "Calle de Ulldecona, 15, 08007 Barcelona, Spain",
+                    ],
+                ],
             ],
             'FR' => [
                 'Items' => [
@@ -89,9 +89,9 @@ class MockDriver implements DriverContract
                         'Id' => '3',
                         'Type' => 'Street',
                         'Text' => '48 Boulevard Jourdan',
-                        'Description' => "DELTA, Boulevard Jourdan, 48, 75014 Paris, France"
-                    ]
-                ]
+                        'Description' => "DELTA, Boulevard Jourdan, 48, 75014 Paris, France",
+                    ],
+                ],
             ],
             'DE' => [
                 'Items' => [
@@ -99,10 +99,10 @@ class MockDriver implements DriverContract
                         'Id' => '4',
                         'Type' => 'Street',
                         'Text' => '32 Pariser Platz, 10117',
-                        'Description' => "Pariser Platz, 32, 10117 Berlin, Germany"
-                    ]
-                ]
-            ]   
+                        'Description' => "Pariser Platz, 32, 10117 Berlin, Germany",
+                    ],
+                ],
+            ],
         ];
 
         return $suggestions[$country] ?? $suggestions['default'];
@@ -144,8 +144,8 @@ class MockDriver implements DriverContract
          */
         $suggestions = app(Suggestions::class);
 
-        foreach ($response['Items'] ?? [] as $item) {
-            if (! isset($item['Id'])) {
+        foreach($response['Items'] ?? [] as $item) {
+            if (!isset($item['Id'])) {
                 continue;
             }
 
@@ -170,67 +170,217 @@ class MockDriver implements DriverContract
                 "Items" => [
                     [
                         'Id' => 'default',
-                        'Street' => 'Example Street',
-                        'City' => 'Example City',
-                        'Line1' => 'Example Street',
-                        'Line2' => '20A',
-                        "Line3" => "",
-                        'PostalCode' => '1234'
-                    ]
-                ]
+                        'DomesticId' => '8170404',
+                        'Language' => 'ENG',
+                        'LanguageAlternatives' => 'ENG',
+                        'Department' => '',
+                        'Company' => '',
+                        'SubBuilding' => '',
+                        'BuildingNumber' => '',
+                        'BuildingName' => '32A',
+                        'SecondaryStreet' => '',
+                        'Street' => 'Greville Street',
+                        'Block' => '',
+                        'Neighbourhood' => '',
+                        'District' => '',
+                        'City' => 'London',
+                        'Line1' => '32A Greville Street',
+                        'Line2' => '',
+                        'Line3' => '',
+                        'Line4' => '',
+                        'Line5' => '',
+                        'AdminAreaName' => 'Camden',
+                        'AdminAreaCode' => '',
+                        'Province' => '',
+                        'ProvinceName' => '',
+                        'ProvinceCode' => '',
+                        'PostalCode' => 'EC1N 8TB',
+                        'CountryName' => 'United Kingdom',
+                        'CountryIso2' => 'GB',
+                        'CountryIso3' => 'GBR',
+                        'CountryIsoNumber' => 826,
+                        'SortingNumber1' => '74116',
+                        'SortingNumber2' => '',
+                        'Barcode' => '(EC1N8TB2R9)',
+                        'POBoxNumber' => '',
+                        'Label' => ' 32A Greville Street LONDON EC1N 8TB UNITED KINGDOM ',
+                        'Type' => 'Residential',
+                        'DataLevel' => 'Premise',
+                    ],
+                ],
             ],
             "1" => [
                 "Items" => [
                     [
                         'Id' => '1',
-                        'Street' => 'Greville',
+                        'DomesticId' => '8170414',
+                        'Language' => 'ENG',
+                        'LanguageAlternatives' => 'ENG',
+                        'Department' => '',
+                        'Company' => '',
+                        'SubBuilding' => '',
+                        'BuildingNumber' => '',
+                        'BuildingName' => '32A',
+                        'SecondaryStreet' => '',
+                        'Street' => 'Greville Street',
+                        'Block' => '',
+                        'Neighbourhood' => '',
+                        'District' => '',
                         'City' => 'London',
-                        'Line1' => 'Greville Street',
-                        'Line2' => '32B',
-                        "Line3" => "",
-                        'PostalCode' => 'EC1N 8TB'
-                    ]
-                ]
+                        'Line1' => '32A Greville Street',
+                        'Line2' => '',
+                        'Line3' => '',
+                        'Line4' => '',
+                        'Line5' => '',
+                        'AdminAreaName' => 'Camden',
+                        'AdminAreaCode' => '',
+                        'Province' => '',
+                        'ProvinceName' => '',
+                        'ProvinceCode' => '',
+                        'PostalCode' => 'EC1N 8TB',
+                        'CountryName' => 'United Kingdom',
+                        'CountryIso2' => 'GB',
+                        'CountryIso3' => 'GBR',
+                        'CountryIsoNumber' => 826,
+                        'SortingNumber1' => '74116',
+                        'SortingNumber2' => '',
+                        'Barcode' => '(EC1N8TB2R9)',
+                        'POBoxNumber' => '',
+                        'Label' => ' 32A Greville Street LONDON EC1N 8TB UNITED KINGDOM ',
+                        'Type' => 'Residential',
+                        'DataLevel' => 'Premise',
+                    ],
+                ],
             ],
             "2" => [
                 "Items" => [
                     [
                         'Id' => '2',
+                        'DomesticId' => '8170402',
+                        'Language' => 'ENG',
+                        'LanguageAlternatives' => 'ENG',
+                        'Department' => '',
+                        'Company' => '',
+                        'SubBuilding' => '',
+                        'BuildingNumber' => '',
+                        'BuildingName' => '32A',
+                        'SecondaryStreet' => '',
                         'Street' => 'Ulldecona',
+                        'Block' => '',
+                        'Neighbourhood' => '',
+                        'District' => '',
                         'City' => 'Roquetes',
                         'Line1' => 'Calle de Ulldecona',
                         'Line2' => '15',
                         "Line3" => "",
-                        'PostalCode' => '43520'
-                    ]
-                ]
+                        'Line4' => '',
+                        'Line5' => '',
+                        'AdminAreaName' => 'Camden',
+                        'AdminAreaCode' => '',
+                        'Province' => '',
+                        'ProvinceName' => '',
+                        'ProvinceCode' => '',
+                        'PostalCode' => '43520',
+                        'CountryName' => 'United Kingdom',
+                        'CountryIso2' => 'GB',
+                        'CountryIso3' => 'GBR',
+                        'CountryIsoNumber' => 826,
+                        'SortingNumber1' => '74116',
+                        'SortingNumber2' => '',
+                        'Barcode' => '(EC1N8TB2R9)',
+                        'POBoxNumber' => '',
+                        'Label' => ' 15 Calle de Ulldecona PARIS 43520 FRANCE',
+                        'Type' => 'Residential',
+                        'DataLevel' => 'Premise',
+                    ],
+                ],
             ],
             "3" => [
                 "Items" => [
                     [
                         'Id' => '3',
+                        'DomesticId' => '8170403',
+                        'Language' => 'ENG',
+                        'LanguageAlternatives' => 'ENG',
+                        'Department' => '',
+                        'Company' => '',
+                        'SubBuilding' => '',
+                        'BuildingNumber' => '',
+                        'BuildingName' => '32A',
+                        'SecondaryStreet' => '',
                         'Street' => 'Boulevard Jourdan',
+                        'Block' => '',
+                        'Neighbourhood' => '',
+                        'District' => '',
                         'City' => 'Paris',
                         'Line1' => 'Boulevard Jourdan',
                         'Line2' => '48',
                         "Line3" => "",
-                        'PostalCode' => '75014'
-                    ]
-                ]
+                        'Line4' => '',
+                        'Line5' => '',
+                        'AdminAreaName' => 'Camden',
+                        'AdminAreaCode' => '',
+                        'Province' => '',
+                        'ProvinceName' => '',
+                        'ProvinceCode' => '',
+                        'PostalCode' => '75014',
+                        'CountryName' => 'United Kingdom',
+                        'CountryIso2' => 'GB',
+                        'CountryIso3' => 'GBR',
+                        'CountryIsoNumber' => 826,
+                        'SortingNumber1' => '74116',
+                        'SortingNumber2' => '',
+                        'Barcode' => '(EC1N8TB2R9)',
+                        'POBoxNumber' => '',
+                        'Label' => ' 15 Calle de Ulldecona PARIS 43520 FRANCE',
+                        'Type' => 'Residential',
+                        'DataLevel' => 'Premise',
+                    ],
+                ],
             ],
             "4" => [
                 "Items" => [
                     [
                         'Id' => '4',
+                        'DomesticId' => '8170403',
+                        'Language' => 'ENG',
+                        'LanguageAlternatives' => 'ENG',
+                        'Department' => '',
+                        'Company' => '',
+                        'SubBuilding' => '',
+                        'BuildingNumber' => '',
+                        'BuildingName' => '32A',
+                        'SecondaryStreet' => '',
                         'Street' => 'Pariser Platz',
+                        'Block' => '',
+                        'Neighbourhood' => '',
+                        'District' => '',
                         'City' => 'Berlin',
                         'Line1' => "Pariser Platz",
                         "Line2" => "32",
                         "Line3" => "",
-                        "PostalCode" => "10117"
-                    ]
-                ]
-            ]
+                        'Line4' => '',
+                        'Line5' => '',
+                        'AdminAreaName' => 'Camden',
+                        'AdminAreaCode' => '',
+                        'Province' => '',
+                        'ProvinceName' => '',
+                        'ProvinceCode' => '',
+                        "PostalCode" => "10117",
+                        'CountryName' => 'United Kingdom',
+                        'CountryIso2' => 'GB',
+                        'CountryIso3' => 'GBR',
+                        'CountryIsoNumber' => 826,
+                        'SortingNumber1' => '74116',
+                        'SortingNumber2' => '',
+                        'Barcode' => '(EC1N8TB2R9)',
+                        'POBoxNumber' => '',
+                        'Label' => ' 15 Calle de Ulldecona PARIS 43520 FRANCE',
+                        'Type' => 'Residential',
+                        'DataLevel' => 'Premise',
+                    ],
+                ],
+            ],
 
         ];
 
@@ -250,12 +400,13 @@ class MockDriver implements DriverContract
 
         $addressDetails = array_first($response['Items']) ?? null;
 
-        if (! $addressDetails) {
+        if (!$addressDetails) {
             return $details;
         }
 
         return $details->setPostalCode($addressDetails['PostalCode'] ?? '')
             ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
+            ->setCompany($addressDetails['Company'])
             ->setCity($addressDetails['City'])
             ->setLine1($addressDetails['Line1'])
             ->setLine2($addressDetails['Line2'])

@@ -93,7 +93,7 @@ class LoqateDriver implements DriverContract
      * @param $id
      * @return Details
      */
-    public function getDetails($id): Details
+    public function getDetails($id, $raw = false): Details
     {
         return $this->parseDetails($this->client->get(
             $this->detailsEndpoint,
@@ -105,7 +105,7 @@ class LoqateDriver implements DriverContract
      * @param $response
      * @return Details
      */
-    public function parseDetails($response)
+    public function parseDetails($response, $raw = false)
     {
 
         /**
@@ -119,7 +119,7 @@ class LoqateDriver implements DriverContract
             return $details;
         }
 
-        return $details->setPostalCode($addressDetails['PostalCode'] ?? '')
+        return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
             ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
             ->setCompany($addressDetails['Company'])
             ->setCity($addressDetails['City'])

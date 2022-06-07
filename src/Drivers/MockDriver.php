@@ -163,7 +163,7 @@ class MockDriver implements DriverContract
      * @param $id
      * @return Details
      */
-    public function getDetails($id): Details
+    public function getDetails($id, bool $raw = false): Details
     {
         $addresses = [
             'default' => [
@@ -384,14 +384,14 @@ class MockDriver implements DriverContract
 
         ];
 
-        return $this->parseDetails($addresses[$id]);
+        return $this->parseDetails($addresses[$id], $raw);
     }
 
     /**
      * @param $response
      * @return Details
      */
-    public function parseDetails($response)
+    public function parseDetails($response, bool $raw = false)
     {
         /**
          * @var $details Details
@@ -404,7 +404,7 @@ class MockDriver implements DriverContract
             return $details;
         }
 
-        return $details->setPostalCode($addressDetails['PostalCode'] ?? '')
+        return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
             ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
             ->setCompany($addressDetails['Company'])
             ->setCity($addressDetails['City'])

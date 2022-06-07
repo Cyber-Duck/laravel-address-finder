@@ -17,7 +17,8 @@ interface DriverContract
 
     /**
      * @param $id
+     * @param bool $raw
      * @return Details
      */
-    public function getDetails($id): Details;
+    public function getDetails($id, bool $raw = false): Details;
 }

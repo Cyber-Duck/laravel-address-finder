@@ -163,7 +163,7 @@ class MockDriver implements DriverContract
      * @param $id
      * @return Details
      */
-    public function getDetails($id, bool $raw = false): Details
+    public function getDetails($id, bool $raw = false)
     {
         $addresses = [
             'default' => [
@@ -389,7 +389,7 @@ class MockDriver implements DriverContract
 
     /**
      * @param $response
-     * @return Details
+     * @return Details|array
      */
     public function parseDetails($response, bool $raw = false)
     {

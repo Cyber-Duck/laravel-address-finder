@@ -24,11 +24,12 @@ class AddressFinder
 
     /**
      * @param $addressId
-     * @return Details
+     * @param bool $raw
+     * @return Details|array
      */
-    public function details($addressId)
+    public function details($addressId, bool $raw = false)
     {
-        return $this->addressEngine()->getDetails($addressId);
+        return $this->addressEngine()->getDetails($addressId, $raw);
     }
 
     /**

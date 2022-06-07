@@ -25,7 +25,7 @@ class AddressFinder
     /**
      * @param $addressId
      * @param bool $raw
-     * @return Details
+     * @return Details|array
      */
     public function details($addressId, bool $raw = false)
     {

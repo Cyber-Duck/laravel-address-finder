@@ -93,7 +93,7 @@ class LoqateDriver implements DriverContract
      * @param $id
      * @return Details
      */
-    public function getDetails($id, $raw = false): Details
+    public function getDetails($id, $raw = false)
     {
         return $this->parseDetails($this->client->get(
             $this->detailsEndpoint,
@@ -103,7 +103,7 @@ class LoqateDriver implements DriverContract
 
     /**
      * @param $response
-     * @return Details
+     * @return Details|array
      */
     public function parseDetails($response, $raw = false)
     {

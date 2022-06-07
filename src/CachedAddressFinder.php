@@ -42,7 +42,7 @@ class CachedAddressFinder extends AddressFinder
      * @param $addressId
      * @return Details
      */
-    public function details($addressId)
+    public function details($addressId, bool $raw = false)
     {
         return \Cache::store($this->store)->remember(
             $this->buildCacheKey([$addressId]),

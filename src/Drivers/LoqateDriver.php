@@ -98,7 +98,7 @@ class LoqateDriver implements DriverContract
         return $this->parseDetails($this->client->get(
             $this->detailsEndpoint,
             ['Id' => $id]
-        )->json());
+        )->json(), $raw);
     }
 
     /**

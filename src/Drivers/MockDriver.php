@@ -151,8 +151,8 @@ class MockDriver implements DriverContract
 
             $suggestions->add(
                 $item['Id'],
-                $item['Type'],
                 $item['Text'] . ($item['Description'] ? " - {$item['Description']}" : ''),
+                $item['Type'],
                 str_contains($item['Description'], 'Addresses')
             );
         }

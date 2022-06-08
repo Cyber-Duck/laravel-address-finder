@@ -19,11 +19,12 @@ class Suggestions
      * @param $text
      * @param $hasChildren
      */
-    public function add($id, $text, $hasChildren)
+    public function add($id, $text, $type, $hasChildren)
     {
         $this->suggestions[] = [
             'id' => $id,
             'text' => $text,
+            'type' => $type,
             'has_children' => $hasChildren
         ];
     }

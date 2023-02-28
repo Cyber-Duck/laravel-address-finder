@@ -3,6 +3,7 @@
 namespace CyberDuck\AddressFinder;
 
 use CyberDuck\AddressFinder\Drivers\DriverContract;
+use Illuminate\Support\Str;
 
 /**
  * Class CachedAddressFinder
@@ -56,11 +57,20 @@ class CachedAddressFinder extends AddressFinder
     }
 
     /**
+     * @param $slug
+     * @return string
+     */
+    private static function makeSlug($slug): string
+    {
+        return Str::of($slug)->slug('-');
+    }
+
+    /**
      * @param $params
      * @return string
      */
     private function buildCacheKey($params)
     {
-        return implode('-', array_map('str_slug', $params));
+        return implode('-', array_map('self::makeSlug', $params));
     }
 }

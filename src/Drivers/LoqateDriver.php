@@ -6,6 +6,7 @@ use CyberDuck\AddressFinder\Details;
 use CyberDuck\AddressFinder\Suggestions;
 use Http;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class LoqateDriver
@@ -114,7 +115,7 @@ class LoqateDriver implements DriverContract
          */
         $details = app(Details::class);
 
-        $addressDetails = array_first($response['Items']) ?? null;
+        $addressDetails = Arr::first($response['Items']) ?? null;
 
         if (! $addressDetails) {
             return $details;

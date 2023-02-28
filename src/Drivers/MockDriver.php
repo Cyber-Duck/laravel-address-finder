@@ -5,6 +5,7 @@ namespace CyberDuck\AddressFinder\Drivers;
 use CyberDuck\AddressFinder\Details;
 use CyberDuck\AddressFinder\Suggestions;
 use Faker\Generator;
+use Illuminate\Support\Arr;
 
 /**
  * Class MockDriver
@@ -399,7 +400,7 @@ class MockDriver implements DriverContract
          */
         $details = app(Details::class);
 
-        $addressDetails = array_first($response['Items']) ?? null;
+        $addressDetails = Arr::first($response['Items']) ?? null;
 
         if (!$addressDetails) {
             return $details;

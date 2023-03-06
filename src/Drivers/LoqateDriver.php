@@ -37,7 +37,7 @@ class LoqateDriver implements DriverContract
         $config = config('laravel-address-finder.loqate');
         $this->suggestionsEndpoint = $config['api']['endpoints']['suggestions'];
         $this->detailsEndpoint = $config['api']['endpoints']['details'];
-        $this->client =  Http::withOptions([
+        $this->client = Http::withOptions([
             'base_uri' => $config['api']['base_uri'],
             'query' => [
                 'Key' => $config['api']['key'],
@@ -69,9 +69,7 @@ class LoqateDriver implements DriverContract
      */
     public function parseSuggestions($response)
     {
-        /**
-         * @var $suggestions Suggestions
-         */
+        /** @var Suggestions $suggestions */
         $suggestions = app(Suggestions::class);
 
         foreach ($response['Items'] ?? [] as $item) {
@@ -92,29 +90,32 @@ class LoqateDriver implements DriverContract
 
     /**
      * @param $id
+     * @param bool $raw
+     * @param bool $translated
      * @return Details
      */
-    public function getDetails($id, $raw = false)
+    public function getDetails($id, bool $raw = false, bool $translated = false)
     {
         return $this->parseDetails($this->client->get(
             $this->detailsEndpoint,
             ['Id' => $id]
-        )->json(), $raw);
+        )->json(), $raw, $translated);
     }
 
     /**
      * @param $response
+     * @param bool $raw
+     * @param bool $translated
      * @return Details|array
      */
-    public function parseDetails($response, $raw = false)
+    public function parseDetails($response, bool $raw = false, bool $translated = false)
     {
-
-        /**
-         * @var $details Details
-         */
+        /** @var Details $details */
         $details = app(Details::class);
 
-        $addressDetails = array_first($response['Items']) ?? null;
+        $addressDetails = array_first($response['Items'], function ($item) use ($translated) {
+            return ! $translated || $item['Language'] === 'ENG';
+        });
 
         if (! $addressDetails) {
             return $details;

@@ -18,7 +18,8 @@ interface DriverContract
     /**
      * @param $id
      * @param bool $raw
+     * @param bool $translated
      * @return Details
      */
-    public function getDetails($id, bool $raw = false);
+    public function getDetails($id, bool $raw = false, bool $translated = false);
 }

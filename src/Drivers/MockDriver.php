@@ -139,9 +139,7 @@ class MockDriver implements DriverContract
      */
     public function parseSuggestions($response)
     {
-        /**
-         * @var $suggestions Suggestions
-         */
+        /** @var Suggestions $suggestions */
         $suggestions = app(Suggestions::class);
 
         foreach($response['Items'] ?? [] as $item) {
@@ -162,9 +160,11 @@ class MockDriver implements DriverContract
 
     /**
      * @param $id
+     * @param bool $raw
+     * @param bool $translated
      * @return Details
      */
-    public function getDetails($id, bool $raw = false)
+    public function getDetails($id, bool $raw = false, bool $translated = false)
     {
         $addresses = [
             'default' => [
@@ -385,23 +385,23 @@ class MockDriver implements DriverContract
 
         ];
 
-        return $this->parseDetails($addresses[$id], $raw);
+        return $this->parseDetails($addresses[$id], $raw, $translated);
     }
 
     /**
      * @param $response
+     * @param bool $raw
+     * @param bool $translated
      * @return Details|array
      */
-    public function parseDetails($response, bool $raw = false)
+    public function parseDetails($response, bool $raw = false, bool $translated = false)
     {
-        /**
-         * @var $details Details
-         */
+        /** @var Details $details */
         $details = app(Details::class);
 
         $addressDetails = array_first($response['Items']) ?? null;
 
-        if (!$addressDetails) {
+        if (! $addressDetails) {
             return $details;
         }
 

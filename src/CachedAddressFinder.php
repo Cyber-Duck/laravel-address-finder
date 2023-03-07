@@ -40,17 +40,23 @@ class CachedAddressFinder extends AddressFinder
 
     /**
      * @param $addressId
+     * @param bool $raw
+     * @param bool $translated
      * @return Details
      */
-    public function details($addressId, bool $raw = false)
+    public function details($addressId, bool $raw = false, bool $translated = false)
     {
-        $cacheKeyArr = $raw ? [$addressId, 'raw'] : [$addressId];
+        $cacheKeyArr = array_filter([
+            $addressId,
+            $raw ? 'raw' : null,
+            $translated ? 'translated' : null,
+        ]);
 
         return \Cache::store($this->store)->remember(
             $this->buildCacheKey($cacheKeyArr),
             config('laravel-address-finder.cache.ttl', 1440),
-            function () use ($addressId, $raw) {
-                return parent::details($addressId, $raw);
+            function () use ($addressId, $raw, $translated) {
+                return parent::details($addressId, $raw, $translated);
             }
         );
     }

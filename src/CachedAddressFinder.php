@@ -3,6 +3,8 @@
 namespace CyberDuck\AddressFinder;
 
 use CyberDuck\AddressFinder\Drivers\DriverContract;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class CachedAddressFinder
@@ -25,15 +27,23 @@ class CachedAddressFinder extends AddressFinder
      * @param $query
      * @param $country
      * @param $group_id
-     * @return Suggestions
+     * @param bool $raw
+     * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id)
+    public function suggestions($query, $country, $group_id, bool $raw = false): Suggestions|array
     {
+        $cacheKeyArr = array_filter([
+            $query,
+            $country,
+            $group_id,
+            $raw ? 'raw' : null,
+        ]);
+
         return \Cache::store($this->store)->remember(
-            $this->buildCacheKey([$query, $country, $group_id]),
+            $this->buildCacheKey($cacheKeyArr),
             config('laravel-address-finder.cache.ttl', 1440),
-            function () use ($query, $country, $group_id) {
-                return parent::suggestions($query, $country, $group_id);
+            function () use ($query, $country, $group_id, $raw) {
+                return parent::suggestions($query, $country, $group_id, $raw);
             }
         );
     }
@@ -42,31 +52,42 @@ class CachedAddressFinder extends AddressFinder
      * @param $addressId
      * @param bool $raw
      * @param bool $translated
+     * @param array $customFields
      * @return Details
      */
-    public function details($addressId, bool $raw = false, bool $translated = false)
+    public function details($addressId, bool $raw = false, bool $translated = false, array $customFields = [])
     {
         $cacheKeyArr = array_filter([
             $addressId,
             $raw ? 'raw' : null,
             $translated ? 'translated' : null,
+            ! empty($customFields) ? Arr::join($customFields, '-') : null,
         ]);
 
         return \Cache::store($this->store)->remember(
             $this->buildCacheKey($cacheKeyArr),
             config('laravel-address-finder.cache.ttl', 1440),
-            function () use ($addressId, $raw, $translated) {
-                return parent::details($addressId, $raw, $translated);
+            function () use ($addressId, $raw, $translated, $customFields) {
+                return parent::details($addressId, $raw, $translated, $customFields);
             }
         );
+    }
+
+    /**
+     * @param $slug
+     * @return string
+     */
+    private static function makeSlug($slug): string
+    {
+        return Str::of($slug)->slug('-');
     }
 
     /**
      * @param $params
      * @return string
      */
-    private function buildCacheKey($params)
+    private function buildCacheKey($params): string
     {
-        return implode('-', array_map('str_slug', $params));
+        return implode('-', array_map('self::makeSlug', $params));
     }
 }

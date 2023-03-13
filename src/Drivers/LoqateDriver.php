@@ -6,6 +6,8 @@ use CyberDuck\AddressFinder\Details;
 use CyberDuck\AddressFinder\Suggestions;
 use Http;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class LoqateDriver
@@ -49,9 +51,10 @@ class LoqateDriver implements DriverContract
      * @param $query
      * @param $country
      * @param $group_id
-     * @return Suggestions
+     * @param bool $raw
+     * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id): Suggestions
+    public function suggestions($query, $country, $group_id, bool $raw = false): Suggestions|array
     {
         return $this->parseSuggestions($this->client->get(
             $this->suggestionsEndpoint,
@@ -60,17 +63,22 @@ class LoqateDriver implements DriverContract
                 'Text' => $query,
                 'Countries' => $country,
             ]
-        )->json());
+        )->json(), $raw);
     }
 
     /**
      * @param $response
-     * @return Suggestions
+     * @param bool $raw
+     * @return Suggestions|array
      */
-    public function parseSuggestions($response)
+    public function parseSuggestions($response, bool $raw = false): Suggestions|array
     {
         /** @var Suggestions $suggestions */
         $suggestions = app(Suggestions::class);
+
+        if ($raw) {
+            return $response['Items'] ?? [];
+        }
 
         foreach ($response['Items'] ?? [] as $item) {
             if (!isset($item['Id'])) {
@@ -92,33 +100,49 @@ class LoqateDriver implements DriverContract
      * @param $id
      * @param bool $raw
      * @param bool $translated
+     * @param array $customFields
      * @return Details
      */
-    public function getDetails($id, bool $raw = false, bool $translated = false)
+    public function getDetails($id, bool $raw = false, bool $translated = false, array $customFields = [])
     {
+        $payload = ['Id' => $id];
+
+        foreach ($customFields as $key => $value) {
+            $payload['Field' . $key + 1 . 'Format'] = $value;
+        }
+
         return $this->parseDetails($this->client->get(
             $this->detailsEndpoint,
-            ['Id' => $id]
-        )->json(), $raw, $translated);
+            $payload
+        )->json(), $raw, $translated, $customFields);
     }
 
     /**
      * @param $response
      * @param bool $raw
      * @param bool $translated
+     * @param array $customFields
      * @return Details|array
      */
-    public function parseDetails($response, bool $raw = false, bool $translated = false)
+    public function parseDetails($response, bool $raw = false, bool $translated = false, array $customFields = [])
     {
         /** @var Details $details */
         $details = app(Details::class);
 
-        $addressDetails = array_first($response['Items'], function ($item) use ($translated) {
+        $addressDetails = Arr::first($response['Items'], function ($item) use ($translated) {
             return ! $translated || $item['Language'] === 'ENG';
         });
 
         if (! $addressDetails) {
             return $details;
+        }
+
+        $customFieldsResult = [];
+        if (! empty($customFields)) {
+            foreach ($customFields as $key => $value) {
+                $newKey = Str::of($value)->replaceMatches('/[^A-Za-z0-9]++/', '')->lower()->toString();
+                $customFieldsResult[$newKey] = $addressDetails['Field' . $key + 1] ?? '';
+            }
         }
 
         return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
@@ -127,6 +151,7 @@ class LoqateDriver implements DriverContract
             ->setCity($addressDetails['City'])
             ->setLine1($addressDetails['Line1'])
             ->setLine2($addressDetails['Line2'])
-            ->setLine3($addressDetails['Line3']);
+            ->setLine3($addressDetails['Line3'])
+            ->setCustomFields($customFieldsResult);
     }
 }

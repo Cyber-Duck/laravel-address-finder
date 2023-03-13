@@ -15,22 +15,24 @@ class AddressFinder
      * @param $query
      * @param $country
      * @param $group_id
-     * @return Suggestions
+     * @param bool $raw
+     * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id)
+    public function suggestions($query, $country, $group_id, bool $raw = false): Suggestions|array
     {
-        return $this->addressEngine()->suggestions($query, $country, $group_id);
+        return $this->addressEngine()->suggestions($query, $country, $group_id, $raw);
     }
 
     /**
      * @param $addressId
      * @param bool $raw
      * @param bool $translated
+     * @param array $customFields
      * @return Details|array
      */
-    public function details($addressId, bool $raw = false, bool $translated = false)
+    public function details($addressId, bool $raw = false, bool $translated = false, array $customFields = [])
     {
-        return $this->addressEngine()->getDetails($addressId, $raw, $translated);
+        return $this->addressEngine()->getDetails($addressId, $raw, $translated, $customFields);
     }
 
     /**

@@ -425,6 +425,23 @@ class MockDriver implements DriverContract
             return $details;
         }
 
+        return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
+            ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
+            ->setCompany($addressDetails['Company'])
+            ->setCity($addressDetails['City'])
+            ->setLine1($addressDetails['Line1'])
+            ->setLine2($addressDetails['Line2'])
+            ->setLine3($addressDetails['Line3'])
+            ->setCustomFields($this->buildCustomFieldsForResponse($customFields, $addressDetails));
+    }
+
+    /**
+     * @param array $customFields
+     * @param array $addressDetails
+     * @return array
+     */
+    private function buildCustomFieldsForResponse(array $customFields, array $addressDetails): array
+    {
         $customFieldsResult = [];
         if (! empty($customFields)) {
             foreach ($customFields as $key => $value) {
@@ -433,13 +450,6 @@ class MockDriver implements DriverContract
             }
         }
 
-        return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
-            ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
-            ->setCompany($addressDetails['Company'])
-            ->setCity($addressDetails['City'])
-            ->setLine1($addressDetails['Line1'])
-            ->setLine2($addressDetails['Line2'])
-            ->setLine3($addressDetails['Line3'])
-            ->setCustomFields($customFieldsResult);
+        return $customFieldsResult;
     }
 }

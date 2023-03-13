@@ -105,15 +105,9 @@ class LoqateDriver implements DriverContract
      */
     public function getDetails($id, bool $raw = false, bool $translated = false, array $customFields = [])
     {
-        $payload = ['Id' => $id];
-
-        foreach ($customFields as $key => $value) {
-            $payload['Field' . $key + 1 . 'Format'] = $value;
-        }
-
         return $this->parseDetails($this->client->get(
             $this->detailsEndpoint,
-            $payload
+            $this->buildDetailsPayload($id, $customFields)
         )->json(), $raw, $translated, $customFields);
     }
 
@@ -137,6 +131,39 @@ class LoqateDriver implements DriverContract
             return $details;
         }
 
+        return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
+            ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
+            ->setCompany($addressDetails['Company'])
+            ->setCity($addressDetails['City'])
+            ->setLine1($addressDetails['Line1'])
+            ->setLine2($addressDetails['Line2'])
+            ->setLine3($addressDetails['Line3'])
+            ->setCustomFields($this->buildCustomFieldsForResponse($customFields, $addressDetails));
+    }
+
+    /**
+     * @param $id
+     * @param array $customFields
+     * @return array
+     */
+    private function buildDetailsPayload($id, array $customFields): array
+    {
+        $payload = ['Id' => $id];
+
+        foreach ($customFields as $key => $value) {
+            $payload['Field' . $key + 1 . 'Format'] = $value;
+        }
+
+        return $payload;
+    }
+
+    /**
+     * @param array $customFields
+     * @param array $addressDetails
+     * @return array
+     */
+    private function buildCustomFieldsForResponse(array $customFields, array $addressDetails): array
+    {
         $customFieldsResult = [];
         if (! empty($customFields)) {
             foreach ($customFields as $key => $value) {
@@ -145,13 +172,6 @@ class LoqateDriver implements DriverContract
             }
         }
 
-        return $raw ? $addressDetails : $details->setPostalCode($addressDetails['PostalCode'] ?? '')
-            ->setProvinceCode($addressDetails['ProvinceCode'] ?? '')
-            ->setCompany($addressDetails['Company'])
-            ->setCity($addressDetails['City'])
-            ->setLine1($addressDetails['Line1'])
-            ->setLine2($addressDetails['Line2'])
-            ->setLine3($addressDetails['Line3'])
-            ->setCustomFields($customFieldsResult);
+        return $customFieldsResult;
     }
 }

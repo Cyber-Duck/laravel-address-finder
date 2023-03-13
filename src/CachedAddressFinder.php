@@ -30,7 +30,7 @@ class CachedAddressFinder extends AddressFinder
      * @param bool $raw
      * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id, bool $raw = false): Suggestions|array
+    public function suggestions($query, $country, $group_id, bool $raw = false)
     {
         $cacheKeyArr = array_filter([
             $query,

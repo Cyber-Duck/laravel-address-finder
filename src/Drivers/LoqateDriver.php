@@ -54,7 +54,7 @@ class LoqateDriver implements DriverContract
      * @param bool $raw
      * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id, bool $raw = false): Suggestions|array
+    public function suggestions($query, $country, $group_id, bool $raw = false)
     {
         return $this->parseSuggestions($this->client->get(
             $this->suggestionsEndpoint,
@@ -71,7 +71,7 @@ class LoqateDriver implements DriverContract
      * @param bool $raw
      * @return Suggestions|array
      */
-    public function parseSuggestions($response, bool $raw = false): Suggestions|array
+    public function parseSuggestions($response, bool $raw = false)
     {
         /** @var Suggestions $suggestions */
         $suggestions = app(Suggestions::class);

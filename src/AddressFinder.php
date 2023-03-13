@@ -18,7 +18,7 @@ class AddressFinder
      * @param bool $raw
      * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id, bool $raw = false): Suggestions|array
+    public function suggestions($query, $country, $group_id, bool $raw = false)
     {
         return $this->addressEngine()->suggestions($query, $country, $group_id, $raw);
     }

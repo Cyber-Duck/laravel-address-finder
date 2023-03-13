@@ -151,7 +151,7 @@ class LoqateDriver implements DriverContract
         $payload = ['Id' => $id];
 
         foreach ($customFields as $key => $value) {
-            $payload['Field' . $key + 1 . 'Format'] = $value;
+            $payload['Field' . ($key + 1) . 'Format'] = $value;
         }
 
         return $payload;
@@ -168,7 +168,7 @@ class LoqateDriver implements DriverContract
         if (! empty($customFields)) {
             foreach ($customFields as $key => $value) {
                 $newKey = Str::of($value)->replaceMatches('/[^A-Za-z0-9]++/', '')->lower()->toString();
-                $customFieldsResult[$newKey] = $addressDetails['Field' . $key + 1] ?? '';
+                $customFieldsResult[$newKey] = $addressDetails['Field' . ($key + 1)] ?? '';
             }
         }
 

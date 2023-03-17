@@ -5,6 +5,8 @@ namespace CyberDuck\AddressFinder\Drivers;
 use CyberDuck\AddressFinder\Details;
 use CyberDuck\AddressFinder\Suggestions;
 use Faker\Generator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 /**
  * Class MockDriver
@@ -36,15 +38,16 @@ class MockDriver implements DriverContract
      * @param $query
      * @param $country
      * @param $group_id
-     * @return Suggestions
+     * @param bool $raw
+     * @return Suggestions|array
      */
-    public function suggestions($query, $country, $group_id): Suggestions
+    public function suggestions($query, $country, $group_id, bool $raw = false)
     {
         if (!empty($group_id)) {
-            return $this->parseSuggestions($this->getAddressChildrenResponse());
+            return $this->parseSuggestions($this->getAddressChildrenResponse(), $raw);
         }
 
-        return $this->parseSuggestions($this->getSuggestedAddressesResponse($country));
+        return $this->parseSuggestions($this->getSuggestedAddressesResponse($country), $raw);
     }
 
     /**
@@ -118,14 +121,14 @@ class MockDriver implements DriverContract
                 [
                     'Id' => 'ES|TT|A|17240004045469|1',
                     'Type' => 'Address',
-                    'Text' => $this->mockedAddress['address_line_1'] . ' ' . str_random(2),
+                    'Text' => $this->mockedAddress['address_line_1'] . ' ' . Str::random(2),
                     'Highlight' => '',
                     'Description' => "{$this->mockedAddress['postal_code']} {$this->mockedAddress['city']}",
                 ],
                 [
                     'Id' => 'ES|TT|A|17240010299823|1S',
                     'Type' => 'Address',
-                    'Text' => $this->mockedAddress['address_line_1'] . ' ' . str_random(2),
+                    'Text' => $this->mockedAddress['address_line_1'] . ' ' . Str::random(2),
                     'Highlight' => '',
                     'Description' => "{$this->mockedAddress['postal_code']} {$this->mockedAddress['city']}",
                 ],
@@ -135,12 +138,17 @@ class MockDriver implements DriverContract
 
     /**
      * @param $response
-     * @return Suggestions
+     * @param bool $raw
+     * @return Suggestions|array
      */
-    public function parseSuggestions($response)
+    public function parseSuggestions($response, bool $raw = false)
     {
         /** @var Suggestions $suggestions */
         $suggestions = app(Suggestions::class);
+
+        if ($raw) {
+            return $response['Items'] ?? [];
+        }
 
         foreach($response['Items'] ?? [] as $item) {
             if (!isset($item['Id'])) {
@@ -162,9 +170,10 @@ class MockDriver implements DriverContract
      * @param $id
      * @param bool $raw
      * @param bool $translated
+     * @param array $customFields
      * @return Details
      */
-    public function getDetails($id, bool $raw = false, bool $translated = false)
+    public function getDetails($id, bool $raw = false, bool $translated = false, array $customFields = [])
     {
         $addresses = [
             'default' => [
@@ -207,6 +216,8 @@ class MockDriver implements DriverContract
                         'Label' => ' 32A Greville Street LONDON EC1N 8TB UNITED KINGDOM ',
                         'Type' => 'Residential',
                         'DataLevel' => 'Premise',
+                        'Field1' => '51.832993',
+                        'Field2' => '-3.041141',
                     ],
                 ],
             ],
@@ -250,6 +261,8 @@ class MockDriver implements DriverContract
                         'Label' => ' 32A Greville Street LONDON EC1N 8TB UNITED KINGDOM ',
                         'Type' => 'Residential',
                         'DataLevel' => 'Premise',
+                        'Field1' => '50.832993',
+                        'Field2' => '-0.041141',
                     ],
                 ],
             ],
@@ -293,6 +306,8 @@ class MockDriver implements DriverContract
                         'Label' => ' 15 Calle de Ulldecona PARIS 43520 FRANCE',
                         'Type' => 'Residential',
                         'DataLevel' => 'Premise',
+                        'Field1' => '48.832993',
+                        'Field2' => '0.041141',
                     ],
                 ],
             ],
@@ -336,6 +351,8 @@ class MockDriver implements DriverContract
                         'Label' => ' 15 Calle de Ulldecona PARIS 43520 FRANCE',
                         'Type' => 'Residential',
                         'DataLevel' => 'Premise',
+                        'Field1' => '55.832993',
+                        'Field2' => '-1.041141',
                     ],
                 ],
             ],
@@ -379,27 +396,30 @@ class MockDriver implements DriverContract
                         'Label' => ' 15 Calle de Ulldecona PARIS 43520 FRANCE',
                         'Type' => 'Residential',
                         'DataLevel' => 'Premise',
+                        'Field1' => '49.832993',
+                        'Field2' => '1.041141',
                     ],
                 ],
             ],
 
         ];
 
-        return $this->parseDetails($addresses[$id], $raw, $translated);
+        return $this->parseDetails($addresses[$id], $raw, $translated, $customFields);
     }
 
     /**
      * @param $response
      * @param bool $raw
      * @param bool $translated
+     * @param array $customFields
      * @return Details|array
      */
-    public function parseDetails($response, bool $raw = false, bool $translated = false)
+    public function parseDetails($response, bool $raw = false, bool $translated = false, array $customFields = [])
     {
         /** @var Details $details */
         $details = app(Details::class);
 
-        $addressDetails = array_first($response['Items']) ?? null;
+        $addressDetails = Arr::first($response['Items']) ?? null;
 
         if (! $addressDetails) {
             return $details;
@@ -411,6 +431,25 @@ class MockDriver implements DriverContract
             ->setCity($addressDetails['City'])
             ->setLine1($addressDetails['Line1'])
             ->setLine2($addressDetails['Line2'])
-            ->setLine3($addressDetails['Line3']);
+            ->setLine3($addressDetails['Line3'])
+            ->setCustomFields($this->buildCustomFieldsForResponse($customFields, $addressDetails));
+    }
+
+    /**
+     * @param array $customFields
+     * @param array $addressDetails
+     * @return array
+     */
+    private function buildCustomFieldsForResponse(array $customFields, array $addressDetails): array
+    {
+        $customFieldsResult = [];
+        if (! empty($customFields)) {
+            foreach ($customFields as $key => $value) {
+                $newKey = Str::of($value)->replaceMatches('/[^A-Za-z0-9]++/', '')->lower()->toString();
+                $customFieldsResult[$newKey] = $addressDetails['Field' . ($key + 1)] ?? '';
+            }
+        }
+
+        return $customFieldsResult;
     }
 }

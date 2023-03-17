@@ -50,6 +50,11 @@ class Details
     private $state;
 
     /**
+     * @var array
+     */
+    private $customFields = [];
+
+    /**
      * @return mixed
      */
     public function getPostalCode()
@@ -197,11 +202,29 @@ class Details
     }
 
     /**
+     * @return mixed
+     */
+    public function getCustomFields()
+    {
+        return $this->customFields;
+    }
+
+    /**
+     * @param mixed $customFields
+     * @return Details
+     */
+    public function setCustomFields($customFields): Details
+    {
+        $this->customFields = $customFields;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function get()
     {
-        return [
+        return array_merge([
             'postal_code' => $this->getPostalCode(),
             'province_code' => $this->getProvinceCode() ?? '',
             'state' => $this->getState() ?? '',
@@ -210,6 +233,6 @@ class Details
             'address_line_1' => $this->getLine1(),
             'address_line_2' => $this->getLine2(),
             'address_line_3' => $this->getLine3(),
-        ];
+        ], $this->getCustomFields());
     }
 }

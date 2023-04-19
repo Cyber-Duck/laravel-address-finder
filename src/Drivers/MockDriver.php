@@ -3,6 +3,7 @@
 namespace CyberDuck\AddressFinder\Drivers;
 
 use CyberDuck\AddressFinder\Details;
+use CyberDuck\AddressFinder\Postzon;
 use CyberDuck\AddressFinder\Suggestions;
 use Faker\Generator;
 use Illuminate\Support\Arr;
@@ -433,6 +434,130 @@ class MockDriver implements DriverContract
             ->setLine2($addressDetails['Line2'])
             ->setLine3($addressDetails['Line3'])
             ->setCustomFields($this->buildCustomFieldsForResponse($customFields, $addressDetails));
+    }
+
+    /**
+     * @param $postcode
+     * @return Postzon
+     */
+    public function postzon($postcode)
+    {
+        $postzonRecords = [
+            'N7 7PH' => [
+                'Items' => [
+                    [
+                        'Easting' => 530915,
+                        'Northing' => 186310,
+                        'Latitude' => 51.560487,
+                        'Longitude' => -0.112808,
+                        'OsGrid' => 'TQ 30915 86310',
+                        'CountryCode' => '921',
+                        'NewCountryCode' => 'E92000001',
+                        'CountryName' => 'England',
+                        'CountyCode' => '',
+                        'NewCountyCode' => 'E99999999',
+                        'CountyName' => '(pseudo) England (UA/MD/LB)',
+                        'DistrictCode' => '',
+                        'NewDistrictCode' => 'E09000019',
+                        'DistrictName' => 'Islington',
+                        'WardCode' => '00AUGC',
+                        'NewWardCode' => 'E05013703',
+                        'WardName' => '',
+                        'NhsShaCode' => 'Q36',
+                        'NewNhsShaCode' => '',
+                        'NhsShaName' => 'London',
+                        'NhsPctCode' => '',
+                        'NewNhsPctCode' => 'E16000048',
+                        'NhsPctName' => 'Islington',
+                        'LeaCode' => '',
+                        'LeaName' => '',
+                        'GovernmentOfficeCode' => 'H',
+                        'GovernmentOfficeName' => 'London',
+                        'WestminsterConstituencyCode' => 'C36',
+                        'WestminsterConstituencyName' => 'Islington North',
+                        'WestminsterMP' => 'Jeremy Corbyn',
+                        'WestminsterParty' => 'Labour',
+                        'WestminsterConstituencyCode2010' => 'C36',
+                        'WestminsterConstituencyName2010' => 'Islington North',
+                        'LSOACode' => 'E01002730',
+                        'LSOAName' => 'Islington 007A',
+                        'MSOACode' => 'E02000560',
+                        'MSOAName' => 'Islington 007',
+                        'CCGCode' => '93C',
+                        'CCGName' => 'NHS North Central London CCG',
+                        'CCGAreaCode' => '',
+                        'CCGAreaName' => '',
+                        'CCGRegionCode' => '',
+                        'CCGRegionName' => '',
+                    ],
+                ],
+            ],
+            'IG11 9XL' => [
+                'Items' => [
+                    [
+                        'Easting' => 544703,
+                        'Northing' => 184286,
+                        'Latitude' => 51.538933,
+                        'Longitude' => 0.085102,
+                        'OsGrid' => 'TQ 44703 84286',
+                        'CountryCode' => '921',
+                        'NewCountryCode' => 'E92000001',
+                        'CountryName' => 'England',
+                        'CountyCode' => '',
+                        'NewCountyCode' => 'E99999999',
+                        'CountyName' => '(pseudo) England (UA/MD/LB)',
+                        'DistrictCode' => '',
+                        'NewDistrictCode' => 'E09000002',
+                        'DistrictName' => 'Barking and Dagenham',
+                        'WardCode' => '00ABFX',
+                        'NewWardCode' => 'E05014066',
+                        'WardName' => '',
+                        'NhsShaCode' => 'Q36',
+                        'NewNhsShaCode' => '',
+                        'NhsShaName' => 'London',
+                        'NhsPctCode' => '',
+                        'NewNhsPctCode' => 'E16000009',
+                        'NhsPctName' => 'Barking and Dagenham',
+                        'LeaCode' => '',
+                        'LeaName' => '',
+                        'GovernmentOfficeCode' => 'H',
+                        'GovernmentOfficeName' => 'London',
+                        'WestminsterConstituencyCode' => 'A11',
+                        'WestminsterConstituencyName' => 'Barking',
+                        'WestminsterMP' => 'Dame Margaret Hodge',
+                        'WestminsterParty' => 'Labour',
+                        'WestminsterConstituencyCode2010' => 'A11',
+                        'WestminsterConstituencyName2010' => 'Barking',
+                        'LSOACode' => 'E01000009',
+                        'LSOAName' => 'Barking and Dagenham 016B',
+                        'MSOACode' => 'E02000017',
+                        'MSOAName' => 'Barking and Dagenham 016',
+                        'CCGCode' => 'A3A8R',
+                        'CCGName' => 'NHS North East London CCG',
+                        'CCGAreaCode' => '',
+                        'CCGAreaName' => '',
+                        'CCGRegionCode' => '',
+                        'CCGRegionName' => '',
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->parsePostzon($postzonRecords[$postcode]);
+    }
+
+    /**
+     * @param $response
+     * @return Postzon
+     */
+    public function parsePostzon($response)
+    {
+        /** @var Postzon $postzone */
+        $postzon = app(Postzon::class);
+
+        $postzon->setItems($response['Items'] ?? []);
+
+        return $postzon;
     }
 
     /**

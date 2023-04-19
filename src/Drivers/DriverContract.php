@@ -3,6 +3,7 @@
 namespace CyberDuck\AddressFinder\Drivers;
 
 use CyberDuck\AddressFinder\Details;
+use CyberDuck\AddressFinder\Postzon;
 use CyberDuck\AddressFinder\Suggestions;
 
 interface DriverContract
@@ -24,4 +25,10 @@ interface DriverContract
      * @return Details
      */
     public function getDetails($id, bool $raw = false, bool $translated = false, array $customFields = []);
+
+    /**
+     * @param $postcode
+     * @return Postzon
+     */
+    public function postzon($postcode);
 }

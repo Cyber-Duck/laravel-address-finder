@@ -36,6 +36,15 @@ class AddressFinder
     }
 
     /**
+     * @param $postcode
+     * @return Postzon
+     */
+    public function postzon($postcode)
+    {
+        return $this->addressEngine()->postzon($postcode);
+    }
+
+    /**
      * Get the Scout engine for the model.
      *
      * @return DriverContract

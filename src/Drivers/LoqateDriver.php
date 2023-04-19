@@ -3,6 +3,7 @@
 namespace CyberDuck\AddressFinder\Drivers;
 
 use CyberDuck\AddressFinder\Details;
+use CyberDuck\AddressFinder\Postzon;
 use CyberDuck\AddressFinder\Suggestions;
 use Http;
 use Illuminate\Http\Client\PendingRequest;
@@ -27,6 +28,11 @@ class LoqateDriver implements DriverContract
     private $detailsEndpoint;
 
     /**
+     * @var string
+     */
+    private $postzonEndpoint;
+
+    /**
      * @var PendingRequest
      */
     private $client;
@@ -39,6 +45,7 @@ class LoqateDriver implements DriverContract
         $config = config('laravel-address-finder.loqate');
         $this->suggestionsEndpoint = $config['api']['endpoints']['suggestions'];
         $this->detailsEndpoint = $config['api']['endpoints']['details'];
+        $this->postzonEndpoint = $config['api']['endpoints']['postzon'];
         $this->client = Http::withOptions([
             'base_uri' => $config['api']['base_uri'],
             'query' => [
@@ -139,6 +146,34 @@ class LoqateDriver implements DriverContract
             ->setLine2($addressDetails['Line2'])
             ->setLine3($addressDetails['Line3'])
             ->setCustomFields($this->buildCustomFieldsForResponse($customFields, $addressDetails));
+    }
+
+    /**
+     * @param $postcode
+     * @return Postzon
+     */
+    public function postzon($postcode)
+    {
+        return $this->parsePostzon($this->client->get(
+            $this->postzonEndpoint,
+            [
+                'Postcode' => $postcode,
+            ]
+        )->json());
+    }
+
+    /**
+     * @param $response
+     * @return Postzon
+     */
+    public function parsePostzon($response)
+    {
+        /** @var Postzon $postzone */
+        $postzon = app(Postzon::class);
+
+        $postzon->setItems($response['Items'] ?? []);
+
+        return $postzon;
     }
 
     /**

@@ -24,10 +24,11 @@ return [
     'loqate' =>[
         'api' => [
             'key' => env('LOQATE_API_KEY'),
-            'base_uri' => env('LOQATE_API_BASE_URI', 'https://api.addressy.com/Capture/Interactive/'),
+            'base_uri' => env('LOQATE_API_BASE_URI', 'https://api.addressy.com/'),
             'endpoints' => [
-                'suggestions' => 'Find/v1.10/json3.ws',
-                'details' => 'Retrieve/v1.10/json3.ws',
+                'suggestions' => 'Capture/Interactive/Find/v1.10/json3.ws',
+                'details' => 'Capture/Interactive/Retrieve/v1.10/json3.ws',
+                'postzon' => 'GovernmentData/Postzon/RetrieveByPostcode/v1.50/json3ex.ws',
             ],
         ],
     ]

@@ -74,6 +74,21 @@ class CachedAddressFinder extends AddressFinder
     }
 
     /**
+     * @param $postcode
+     * @return Postzon
+     */
+    public function postzon($postcode)
+    {
+        return \Cache::store($this->store)->remember(
+            $this->buildCacheKey([$postcode]),
+            config('laravel-address-finder.cache.ttl', 1440),
+            function () use ($postcode) {
+                return parent::postzon($postcode);
+            }
+        );
+    }
+
+    /**
      * @param $slug
      * @return string
      */

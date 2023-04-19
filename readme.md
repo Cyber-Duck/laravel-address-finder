@@ -7,7 +7,7 @@ This package provides a facade for address searching. Currently the only driver 
 Via Composer
 
 ``` bash
-$ composer require cyberduck/laravel-address-finder
+$ composer require cyber-duck/laravel-address-finder
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ ADDRESS_FINDER_CACHE_DRIVER # If cacheing this setting can be used to override t
 
 ## Default: null
 LOQATE_API_KEY # Required if using the loqate driver
-## Default: https://api.addressy.com/Capture/Interactive/
+## Default: https://api.addressy.com/
 LOQATE_API_BASE_URI # This can be used to overide the API based URI when using the loqate driver
 ```
 
@@ -99,6 +99,67 @@ CyberDuck\AddressFinder\Facades\Address::details('2')->get();
      "address_line_1" => "Greville Street",
      "address_line_2" => "1",
      "address_line_3" => "",
+]
+*/
+```
+
+### Retrieving Postzon record for the given postcode
+
+```php
+// $postcode: The postcode to use to search with
+Address::postzon($postcode);
+```
+
+**Example**
+
+```php
+CyberDuck\AddressFinder\Facades\Address::postzon('N7 7PH')->get();
+
+/*
+[
+    'Easting' => 530915,
+    'Northing' => 186310,
+    'Latitude' => 51.560487,
+    'Longitude' => -0.112808,
+    'OsGrid' => 'TQ 30915 86310',
+    'CountryCode' => '921',
+    'NewCountryCode' => 'E92000001',
+    'CountryName' => 'England',
+    'CountyCode' => '',
+    'NewCountyCode' => 'E99999999',
+    'CountyName' => '(pseudo) England (UA/MD/LB)',
+    'DistrictCode' => '',
+    'NewDistrictCode' => 'E09000019',
+    'DistrictName' => 'Islington',
+    'WardCode' => '00AUGC',
+    'NewWardCode' => 'E05013703',
+    'WardName' => '',
+    'NhsShaCode' => 'Q36',
+    'NewNhsShaCode' => '',
+    'NhsShaName' => 'London',
+    'NhsPctCode' => '',
+    'NewNhsPctCode' => 'E16000048',
+    'NhsPctName' => 'Islington',
+    'LeaCode' => '',
+    'LeaName' => '',
+    'GovernmentOfficeCode' => 'H',
+    'GovernmentOfficeName' => 'London',
+    'WestminsterConstituencyCode' => 'C36',
+    'WestminsterConstituencyName' => 'Islington North',
+    'WestminsterMP' => 'Jeremy Corbyn',
+    'WestminsterParty' => 'Labour',
+    'WestminsterConstituencyCode2010' => 'C36',
+    'WestminsterConstituencyName2010' => 'Islington North',
+    'LSOACode' => 'E01002730',
+    'LSOAName' => 'Islington 007A',
+    'MSOACode' => 'E02000560',
+    'MSOAName' => 'Islington 007',
+    'CCGCode' => '93C',
+    'CCGName' => 'NHS North Central London CCG',
+    'CCGAreaCode' => '',
+    'CCGAreaName' => '',
+    'CCGRegionCode' => '',
+    'CCGRegionName' => '',
 ]
 */
 ```
